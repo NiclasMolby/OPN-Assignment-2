@@ -4,6 +4,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
@@ -13,7 +14,7 @@ import javax.swing.JTextPane;
  * @author ups
  *
  */
-public class ClientController {
+public class ClientController extends UnicastRemoteObject implements Observer {
 
 	/**
 	 * Singleton pattern instance
@@ -23,7 +24,7 @@ public class ClientController {
 	/**
 	 * Singleton pattern access method
 	 */
-	public static synchronized ClientController get() {
+	public static ClientController get() throws RemoteException {
 		if(instance==null) instance = new ClientController();
 		return instance; 
 	}
@@ -46,17 +47,18 @@ public class ClientController {
 	/**
 	 * Initialize, including connecting to a specific catalogue
 	 */
-	private ClientController() { 
+	private ClientController() throws RemoteException{ 
 		//catalogue = new CatalogImpl();
 		Registry registry;
 		try {
 			registry = LocateRegistry.getRegistry("localhost", Config.PORT);
 			catalogue = (ICatalog) registry.lookup(Config.REMOTE_CATALOG_NAME);
+			//catalogue.addObserver(ClientController.get());
 		} catch(RemoteException | NotBoundException e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Increase button clicked in GUI
 	 */
@@ -81,8 +83,10 @@ public class ClientController {
 			setStatus("No such entry: "+productName);
 			return;
 		}
-		if(entry.updateQuantity(increase ? amount : -amount)) // Returns true if success
+		if(entry.updateQuantity(increase ? amount : -amount)){ // Returns true if success
+			catalogue.notifyObservers();
 			updateDisplay();
+		}
 		else
 			setStatus("Negative stock not allowed");
 	}
@@ -150,6 +154,11 @@ public class ClientController {
 	public void setStatusArea(JLabel label) {
 		this.statusLabel = label;
 		setStatus("Ready");
+	}
+
+	@Override
+	public void update() {
+		System.out.println("Test");
 	}
 
 }

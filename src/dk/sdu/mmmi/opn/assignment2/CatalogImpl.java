@@ -22,6 +22,10 @@ public class CatalogImpl extends UnicastRemoteObject implements ICatalog {
 	 */
 	private Map<String,IEntry> stock = new HashMap<String,IEntry>();
 	
+	// Observers
+	private Set<Observer> observers = new HashSet<Observer>();
+
+	
 	/**
 	 * Create and initialize the stock
 	 */
@@ -71,5 +75,24 @@ public class CatalogImpl extends UnicastRemoteObject implements ICatalog {
 		"cucumber", "carrot", "potato", "pear", "apple", "zucchini", "beet", "onion", "tomato", "orange", "banana", "grapes", "sweet potato",
 		"garlic", "lemon", "lime", "cabbage", "corn"
 	};
+
+	@Override
+	public void addObserver(Observer observer) throws RemoteException {
+		observers.add(observer);
+		System.out.println(observer);
+	}
+
+	@Override
+	public void deleteObserver(Observer observer) throws RemoteException {
+		observers.remove(observer);
+	}
+
+	@Override
+	public void notifyObservers() {
+		observers.parallelStream().forEach(observer -> { // Enable parallel notification
+				observer.update(); 
+			
+		});
+	}
 
 }

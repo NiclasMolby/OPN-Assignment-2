@@ -23,4 +23,8 @@ public interface ICatalog extends Remote {
 	 * Search catalog and return all products that match the given prefix
 	 */
 	List<Product> search(String prefix) throws RemoteException;
+	
+	public void addObserver(Observer observer) throws RemoteException;
+	public void deleteObserver(Observer observer) throws RemoteException;
+	public void notifyObservers() throws RemoteException;
 }
