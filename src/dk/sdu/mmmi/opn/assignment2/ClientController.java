@@ -48,17 +48,18 @@ public class ClientController extends UnicastRemoteObject implements Observer {
 	 * Initialize, including connecting to a specific catalogue
 	 */
 	private ClientController() throws RemoteException{ 
-		//catalogue = new CatalogImpl();
+	}
+	
+	public void connect() throws RemoteException {
 		Registry registry;
 		try {
 			registry = LocateRegistry.getRegistry("localhost", Config.PORT);
 			catalogue = (ICatalog) registry.lookup(Config.REMOTE_CATALOG_NAME);
-			//catalogue.addObserver(ClientController.get());
+			catalogue.addObserver(get());
 		} catch(RemoteException | NotBoundException e){
 			e.printStackTrace();
 		}
 	}
-
 	/**
 	 * Increase button clicked in GUI
 	 */
@@ -157,8 +158,8 @@ public class ClientController extends UnicastRemoteObject implements Observer {
 	}
 
 	@Override
-	public void update() {
-		System.out.println("Test");
+	public void update() throws RemoteException {
+		updateDisplay();
 	}
 
 }

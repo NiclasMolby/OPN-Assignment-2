@@ -79,7 +79,6 @@ public class CatalogImpl extends UnicastRemoteObject implements ICatalog {
 	@Override
 	public void addObserver(Observer observer) throws RemoteException {
 		observers.add(observer);
-		System.out.println(observer);
 	}
 
 	@Override
@@ -90,7 +89,12 @@ public class CatalogImpl extends UnicastRemoteObject implements ICatalog {
 	@Override
 	public void notifyObservers() {
 		observers.parallelStream().forEach(observer -> { // Enable parallel notification
-				observer.update(); 
+				try {
+					observer.update();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 			
 		});
 	}

@@ -28,9 +28,16 @@ public class ClientGUI {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			ClientController.get().connect();
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					ClientGUI window = new ClientGUI();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -39,6 +46,8 @@ public class ClientGUI {
 			}
 		});
 	}
+	
+	
 
 	/**
 	 * Create the application.

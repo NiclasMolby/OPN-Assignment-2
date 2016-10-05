@@ -8,21 +8,29 @@ valgfrit at besvare.
 (1) Opsummer de væsentligste ændringer du har lavet ved programmet for
 at introducere brugen af Java RMI.
 
+Jeg har lavet Catalogue og Entry om til proxy objekter samt oprettet en Server klasse.
+Heri har jeg lavet en registry som clienten skal forbinde sig på.
+
 
 
 (2) Hvad har du specifikt gjort for at lave CatalogueImpl og EntryImpl
 til distribuerede proxy objekter?
 
+Jeg har extended UnicastRemoteObject klassen i CatalogueImpl og EntryImpl klasserne, samt extended Remote klassen i Catalogue og Entry klassernes Interfaces, samt kastet RemoteException ved alle metoder.
 
 
 (3) Hvad har du specifikt gjort for at Product objekter kopieres fra
 server til klient?
+
+Jeg har implementeret Serializable interfacet i Produkt klassen.
 
 
 
 (4) Fungerer den distribuerede version af dit program, således at den
 samme funktionalitet som før er bibeholdt, set fra GUIens perspektiv?
 Hvordan er det testet?
+
+Ja det virker. Det er testet ved at afprøve alle de gamle funktionaliteter, og se om de gør det samme nu som før.
 
 
 
@@ -32,9 +40,13 @@ manipulerer de den samme, delte tilstand?  (Det er ikke påkrævet at
 men de bør være synlige efter lokale ændringer i tilstanden.)  Hvordan
 er det testet?
 
+Ja det virker. Det er testet ved at starte flere clienter i hver deres JVM og ændre i den ene, og derefter at “refreshe” i den anden.
+
 
 
 (X) Ekstra spørgsmål, ikke nødvendigt at besvare! Kan du ændre
 programmet ved at introducere en distribueret version af
 observer-patternet, således at ændringer fra en klient umiddelbart er
 synlige på skærmen for de andre klienter?
+
+Ja, har implementeret et observer interface i ClientController klassen samt et observable interface i CatalogImpl klassen.
